@@ -1,0 +1,24 @@
+Mercury:
+    albedo: .07
+    distance: .387
+Venus:
+    albedo: .76
+    distance: .723
+Earth:
+    albedo: .40
+    distance: 1
+Mars:
+    albedo: .15
+    distance: 1.524
+Jupiter:
+    albedo: 0.34
+    distance: 5.203
+Saturn:
+    albedo: .34
+    distance: 9.539
+Uranus:
+    albedo: .30
+    distance: 19.18
+Neptune:
+    albedo: .29
+    distance: 30.06
