@@ -27,7 +27,7 @@ Instead, start from earth's solar flux.
 sigma = 5.67e-8
 equil_temp = lambda d_new, A: (solar_fun(d_new) * (1 - A)/(4*sigma))**(1/4)
 
-with open('data.yaml') as file:
+with open('hw1_data/data.yaml') as file:
     planet_data = yaml.load(file, Loader=yaml.FullLoader)
 
 solar_constants = [solar_fun(planet_data[planet]['distance']) for planet in planet_data.keys()]
@@ -149,15 +149,15 @@ def generate_isolation_contour(data_file='ephemeris.txt', output_name='Earth'):
 
 
 # do mars!
-generate_isolation_contour(data_file='mars_ephemeris.txt', output_name='Mars')
+generate_isolation_contour(data_file='hw1_data/mars_ephemeris.txt', output_name='Mars')
 
 # now Jupiter!
-generate_isolation_contour(data_file='jupiter_emphemeris.txt', output_name='Jupiter')
+generate_isolation_contour(data_file='hw1_data/jupiter_emphemeris.txt', output_name='Jupiter')
 
 # now with Titan. This is gonna get weird
-generate_isolation_contour(data_file='titan_emphemeris.txt', output_name='Titan')
+generate_isolation_contour(data_file='hw1_data/titan_emphemeris.txt', output_name='Titan')
 
 # and last and definitely the strangest: Uranus
-generate_isolation_contour(data_file='uranus_ephemeris.txt', output_name='Uranus')
+generate_isolation_contour(data_file='hw1_data/uranus_ephemeris.txt', output_name='Uranus')
 
 
