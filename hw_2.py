@@ -37,7 +37,22 @@ def open_tabular(data_file, headerlines=0):
     return out_data
 
 
-def q_day(e, delta, biglamda, omega, phi, s_0=1365):
+def string_to_array_1d(string_list):
+    """
+    Converts a 1D list of strings into an array of floats
+
+    Parameters
+    ----------
+    string_list
+
+    Returns
+    -------
+    1D numpy array of floats
+    """
+    return np.array([float(number) for number in string_list])
+
+
+def q_day(e, obliquity, biglamda, omega, phi, s_0=1365):
     """
     q_day = s0/pi (d0/d)**2 (h0*sin(phi)*sin(delta) + cos(phi)cos(delta)(sinh0))
 
@@ -55,21 +70,32 @@ def q_day(e, delta, biglamda, omega, phi, s_0=1365):
     Parameters
     ----------
     e: eccentricity
-    delta: angle of subsolar point, or obliquity
-    phi: latitude
+    obliquity: radians
+        used to calculate delta, the angle of subsolar point
+    biglamda: radians
+        angle between spring equinox and perihelion
+    omega: radians
+        current angle of orbit, measured from spring equinox (obliquity=0)
+    phi: degrees
+        latitude
 
     s_0: average solar irradiance
 
     Returns
     -------
-
+    Average daily insolation at the latitudes given
     """
     output = []
     # in degrees, need radians
+    # delta = np.radians(delta)
+    biglamda = biglamda + np.pi  # pi radians phase shift
+    # omega = np.radians(omega)
     phi = np.radians(phi)
-    delta = np.radians(delta)
 
     for subphi in phi:
+        # calculate the relative tilt to the sun
+        delta = obliquity * np.sin(omega)
+
         data_sanitizer = -np.tan(subphi) * np.tan(delta)
         # if -tan(phi)tan(delta) < -1, sun never sets
         data_sanitizer[data_sanitizer < -1] = -1
@@ -84,14 +110,31 @@ def q_day(e, delta, biglamda, omega, phi, s_0=1365):
         # calculate the fractional difference in distance from the sun
         d = ((1 + e*np.cos(omega - biglamda)) / (1 - e**2))**2
 
-        output.append(s_0/np.pi * d * (h_0 * np.sin(subphi) * np.sin(delta) + np.cos(subphi) * np.cos(delta) * np.sin(h_0)))
+        output.append(s_0/np.pi * d * (h_0 * np.sin(subphi) * np.sin(delta) +
+                                       np.cos(subphi) * np.cos(delta) * np.sin(h_0)))
 
     return np.array(output)
 
-
+"""
+Question 1
+"""
 filename = 'hw2_data/Earth_Milankovitch_Laskar.txt'
 
 data = open_tabular(filename, headerlines=1)
+year = string_to_array_1d(data[0])
+eccentricity = string_to_array_1d(data[1])
+obliquity = string_to_array_1d(data[2])
+arg_perhi = string_to_array_1d(data[3])
 
+omega = np.pi/2  # keep omega in radians
+phi = [33.4]  # keep latitude in degrees
+
+insolation = q_day(e=eccentricity,
+                   obliquity=obliquity,
+                   biglamda=arg_perhi,
+                   omega=omega,
+                   phi=phi)
+
+plt.plot(year, insolation[0])
 
 
