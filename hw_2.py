@@ -135,6 +135,16 @@ insolation = q_day(e=eccentricity,
                    omega=omega,
                    phi=phi)
 
+plt.figure('phoenix_inso', figsize=(8, 6))
 plt.plot(year, insolation[0])
+# limit to 1000 Kyr
+plt.xlim(0, 1000)
+plt.title('Insolation at 33.4° N latitude (Pheonix)')
+plt.ylabel('Daily average insolation (W/m^2)')
+plt.xlabel('Time in the future (Kyr)')
+plt.savefig('phoenix_inso')
+
+
+
 
 
