@@ -144,6 +144,79 @@ plt.ylabel('Daily average insolation (W/m^2)')
 plt.xlabel('Time in the future (Kyr)')
 plt.savefig('phoenix_inso')
 
+# sigma = stefan-boltzmann constant = 5.67e10−8 W⋅m−2⋅K−4
+sigma = 5.67e-8
+
+# insolation = flux
+# flux = sigma*T^4
+Temp = (insolation[0]/sigma)**(1/4)
+
+relative_temp = Temp - Temp[0]
+
+plt.figure('phoenix_temp', figsize=(8, 6))
+plt.plot(year, relative_temp)
+# limit to 1000 Kyr
+plt.xlim(0, 1000)
+plt.title('Temperature increase relative to now (Pheonix)')
+plt.ylabel(r'Change in temperature ($\Delta T\circ C$)')
+plt.xlabel('Time in the future (Kyr)')
+plt.savefig('phoenix_inso')
+
+
+"""
+Question 2:
+Same thing, but for all latitudes
+"""
+polar_angles = np.linspace(-90, 90, num=360)
+
+insolation = q_day(e=eccentricity,
+                   obliquity=obliquity,
+                   biglamda=arg_perhi,
+                   omega=omega,
+                   phi=polar_angles)
+
+limit = 300
+levels = 11
+plt.figure('earth_insolation_summer', figsize=(8, 6))
+conplot = plt.contour(year[:limit], polar_angles, insolation[:, :limit], levels=levels)
+# plt.xlim(0, 300)
+plt.clabel(conplot)
+plt.ylabel('Latitude')
+plt.xlabel('Kiloyears')
+plt.title(r'Future insolation at North Summer $(W/m^2)$')
+plt.savefig('earth_summer_inso')
+
+
+"""
+Question 3:
+Extreme at 158 Kyr
+
+Look Ma, no coding needed!
+"""
+
+# generate orbit positions, one for each day
+orbit_angles = np.linspace(0, 2*np.pi, num=365)
+
+# pick a year
+year = 158
+
+# generate the insolation values for each day of that year
+insolation = q_day(e=eccentricity[year],
+                   obliquity=obliquity[year],
+                   biglamda=arg_perhi[year],
+                   omega=orbit_angles,
+                   phi=polar_angles)
+
+# plot it
+levels = 11
+plt.figure('earth_insolation_summer', figsize=(8, 6))
+conplot = plt.contour(np.arange(orbit_angles.size), polar_angles, insolation, levels=levels)
+# plt.xlim(0, 300)
+plt.clabel(conplot)
+plt.ylabel('Latitude')
+plt.xlabel('Days from Northern Spring Equinox')
+plt.title(r'Insolation of Earth ' + str(year) + ',000 years from now $(W/m^2)$')
+plt.savefig('earth_' + str(year) + 'kyr_inso')
 
 
 
