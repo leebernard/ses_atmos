@@ -6,43 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 '''
-Problem 1
-'''
-.454 * 4180 * 25 / (3.336e5 + 2108*10)
-# 0.133 kg
-
-'''
-Problem 3
-'''
-es = 611.2 * np.exp((18.729*25 - 25**2/227.3) / (25 + 257.87))
-
-# 3168 Pa
-
-8e3 * np.log(es/101.3e3)
-# -27719
-
-'''
-Problem 4
-'''
-# part a solved in wolfram alpha
-# part b)
-R = 5.67e-8 * (148)**4 / (1000*5.9e5)
-# 4.61e-8
-R * 687 * 86400
-
-# part c)
-
-# mass of ice
-2 * np.pi * (3390e3)**2 * (1 - np.sin(np.radians(70))) * 2.7 * 1000
-# 1.176e+16
-
-# scale height
-k = 1.38e-23  # boltzmann constant k_b in J/K
-amu_kg = 1.66e-27  # kg/amu
-
-H = k*148.4/(44*amu_kg * 3.76)
-
-'''
 Problem 5
 '''
 L = 2264.76  # kJ/kg
@@ -145,10 +108,11 @@ plt.xlim(left=10e-24)
 plt.gca().invert_yaxis()
 
 plt.figure('Adiabatic_lapse', figsize=(8, 6))
-plt.plot( lnP, lnT)
-plt.plot(lnP, wet_lnT)
-plt.ylabel('lnT (K)')
-plt.xlabel('lnP (barr)')
+plt.plot(lnT, lnP)
+plt.plot(wet_lnT, lnP)
+plt.xlabel('lnT (K)')
+# plt.xlim(left=0)
+plt.ylabel('lnP (barr)')
 plt.legend(('Dry', 'Wet'))
 plt.xlim(4.2, 5.8)
 plt.ylim(-6, 0)
