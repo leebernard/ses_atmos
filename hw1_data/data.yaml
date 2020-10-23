@@ -22,3 +22,6 @@ Uranus:
 Neptune:
     albedo: .29
     distance: 30.06
+Planet9:
+    albedo: .75
+    distance: 200

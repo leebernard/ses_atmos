@@ -70,28 +70,57 @@ Problem 1
 with open('hw1_data/data.yaml') as file:
     planet_data = yaml.load(file, Loader=yaml.FullLoader)
 
-raw_wavelengths = np.linspace(1e-6, 10e-6)
-curr_data = planet_data['Earth']
 
-earth_temp = equil_temp(curr_data['distance'], curr_data['albedo'])
+def prob1_plot_data(raw_wavelengths, distance, albedo, name):
+    # expects wavelengths in meters, outputs in um
+    earth_temp = equil_temp(distance, albedo)
 
-earth_spectrum = blackbody(raw_wavelengths, temp=earth_temp)
-reflected_spectrum = reflected_rad(raw_wavelengths, curr_data['distance'], curr_data['albedo'])
+    earth_spectrum = blackbody(raw_wavelengths, temp=earth_temp)
+    reflected_spectrum = reflected_rad(raw_wavelengths, distance, albedo)
 
-# convert from per meter to per micrometer
-earth_spectrum = earth_spectrum * 1e-6
-reflected_spectrum = reflected_spectrum * 1e-6
-wavelengths = raw_wavelengths * 1e6
+    # convert from per meter to per micrometer
+    earth_spectrum = earth_spectrum * 1e-6
+    reflected_spectrum = reflected_spectrum * 1e-6
+    wavelengths = raw_wavelengths * 1e6
 
-idx = find_intersection(earth_spectrum, reflected_spectrum)
+    idx = find_intersection(earth_spectrum, reflected_spectrum)
+    intersection_wavelength = wavelengths[idx]
 
-plt.figure('Earth')
-plt.plot(wavelengths, earth_spectrum)
-plt.plot(wavelengths, reflected_spectrum)
-plt.plot(wavelengths[idx], earth_spectrum[idx], 'ro')
-plt.legend(('Earth emission',
-            'Reflected light',
-            'Intersection at %.2f μm' %wavelengths[idx]))
+    plt.figure(name, figsize=(8, 6))
+    plt.plot(wavelengths, earth_spectrum)
+    plt.plot(wavelengths, reflected_spectrum)
+    plt.plot(wavelengths[idx], earth_spectrum[idx], 'ro')
+    plt.legend((name + ' emission',
+                'Reflected light',
+                'Intersection at %.2f μm' %intersection_wavelength))
+    plt.title(name)
+    plt.xlabel('Wavelength (μm)')
+    plt.ylabel('W m^-2 μm^-1 sr^-1')
+    # plt.yscale('log')
+
+    return intersection_wavelength
+
+
+raw_wavelengths = np.linspace(1e-6, 30e-6, num=500)
+name_list = ['Earth', 'Venus', 'Mars', 'Jupiter']
+
+intersection_list = []
+
+for curr_name in name_list:
+    curr_data = planet_data[curr_name]
+    intersection_list.append(prob1_plot_data(raw_wavelengths,
+                                             curr_data['distance'],
+                                             curr_data['albedo'],
+                                             curr_name))
+
+# do planet 9 with special bounds
+curr_data = planet_data['Planet9']
+intersection_list.append(prob1_plot_data(np.linspace(2e-6, 100e-6, num=500),
+                                         curr_data['distance'],
+                                         curr_data['albedo'],
+                                         'Planet9'))
+
+
 
 
 '''
