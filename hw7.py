@@ -36,7 +36,7 @@ plt.legend(('n=%d' %n_space[0],
             'n=%d' %n_space[1],
             'n=%d' %n_space[2]))
 plt.xlabel('Pressure (barrs)')
-plt.ylabel('Opacity')
+plt.ylabel('Opacity τ(p)')
 plt.yscale('log')
 plt.xscale('log')
 plt.title('Optical depth with pressure-dependant k')
@@ -49,6 +49,7 @@ Part d)
 def transmittance(pressure, n, p0=1):
     return np.exp(-1 * o_depth(pressure, n, p0=p0))
 
+
 plt.figure('transmittance', figsize=(8, 6))
 for n in n_space:
     plt.plot(pressure, transmittance(pressure, n))
@@ -58,7 +59,7 @@ plt.legend(('n=%d' %n_space[0],
             'n=%d' %n_space[2]))
 plt.xlabel('Pressure (barrs)')
 plt.ylabel('Transmittance')
-plt.title('Optical depth with pressure-dependant k')
+plt.title('Transmittance t as a function of pressure')
 
 
 '''
