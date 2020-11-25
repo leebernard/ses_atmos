@@ -88,7 +88,7 @@ plt.legend(['0th order', '1st order'])
 
 
 '''generate derivative of absorption profile'''
-with open('project_data/1H2-16O_13513-13698_300K_0.185000.sigma') as file:
+with open('1H2-16O_6250-20000_300K_30.000000.sigma') as file:
     raw_data = file.readlines()
     wave_numbers = []
     cross_sections = []
