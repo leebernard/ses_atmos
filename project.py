@@ -90,11 +90,17 @@ plt.legend(['0th order', '1st order'])
 '''generate derivative of absorption profile'''
 with open('project_data/1H2-16O_13513-13698_300K_0.185000.sigma') as file:
     raw_data = file.readlines()
+    wave_numbers = []
     cross_sections = []
     for x in raw_data:
-        cross_sections.append(x.split())
+        wave_string, cross_string = x.split()
+        wave_numbers.append(float(wave_string))
+        cross_sections.append(float(cross_string))
+    wave_numbers = np.array(wave_numbers)
     cross_sections = np.array(cross_sections)
 
+# convert wavenumber to wavelength
+cross_wavelengths = 1e8/wave_numbers
 
 # scale height
 k = 1.38e-23  # boltzmann constant k_b in J/K
@@ -109,5 +115,9 @@ first_order_depth = delta_alpha(sigma=cross_sections,
                                 star_radius=6.957e8,
                                 planet_radius=6371.0)
 
+plt.figure('derivative transit depth', figsize=(8, 6))
+plt.plot(cross_wavelengths, cross_sections)
+plt.title('1st order transit depth')
+plt.xlabel('Angstroms')
 
 
