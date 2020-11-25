@@ -49,7 +49,7 @@ Part d)
 def transmittance(pressure, n, p0=1):
     return np.exp(-1 * o_depth(pressure, n, p0=p0))
 
-
+an 
 plt.figure('transmittance', figsize=(8, 6))
 for n in n_space:
     plt.plot(pressure, transmittance(pressure, n))
