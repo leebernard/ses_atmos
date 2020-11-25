@@ -6,10 +6,18 @@ coding up Line et al 2016
 
 import numpy as np
 import matplotlib.pyplot as plt
-import yaml
+
 
 from astropy.io import fits
 from scipy.ndimage import gaussian_filter
+
+
+def delta_z(sigma, scale_h):
+    return scale_h * np.gradient(np.log(sigma))
+
+
+def delta_alpha(sigma, scale_h, star_radius, planet_radius):
+    return (2 * planet_radius * delta_z(sigma, scale_h))/star_radius**2
 
 
 def spectrum_slicer(start_angstrom, end_angstrom, angstrom_data, spectrum_data):
@@ -19,6 +27,7 @@ def spectrum_slicer(start_angstrom, end_angstrom, angstrom_data, spectrum_data):
     angstrom_slice = angstrom_data[start_index:end_index]
 
     return angstrom_slice, spectrum_slice
+
 
 with fits.open('sun.fits') as hdul:
     # pull the data
@@ -66,20 +75,39 @@ plt.title('Normalized Slice of Solar spectrum')
 plt.xlabel('Angstroms')
 plt.legend(['.002 angstroms resolution', '%.3f angstroms resolution' %sim_angstroms_per_pixel])
 
+'''Make a derivative spectrum'''
+normalized_spectrum = binned_spectrum/10000
+first_order_spectrum = np.gradient(binned_spectrum/10000)
+
+plt.figure('derivative spectrum', figsize=(8, 6))
+plt.plot(binned_angstroms, normalized_spectrum)
+plt.plot(binned_angstroms, first_order_spectrum + 1)
+plt.title('Derivative Spectrum Comparison')
+plt.xlabel('Angstroms')
+plt.legend(['0th order', '1st order'])
+
+
+'''generate derivative of absorption profile'''
 with open('project_data/1H2-16O_13513-13698_300K_0.185000.sigma') as file:
     raw_data = file.readlines()
     cross_sections = []
     for x in raw_data:
-        cross_sections.append(float(x))
+        cross_sections.append(x.split())
     cross_sections = np.array(cross_sections)
 
 
-def alpha_lambda(z, star_radius, planet_radius):
-    return (planet_radius / star_radius)**2 + (2 * planet_radius * z)/star_radius**2
+# scale height
+k = 1.38e-23  # boltzmann constant k_b in J/K
+amu_kg = 1.66e-27  # kg/amu
+g = 10  # m/s^2
+T = 300  # K
+mass = 18  # amu
+H = k*T/(mass*amu_kg * g)
 
-
-def z_lambda():
-    pass
+first_order_depth = delta_alpha(sigma=cross_sections,
+                                scale_h=H,
+                                star_radius=6.957e8,
+                                planet_radius=6371.0)
 
 
 
