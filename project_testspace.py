@@ -43,16 +43,18 @@ first_order_depth = delta_alpha(sigma=cross_sections,
 # mean spectral resolution
 spec_res = np.mean(np.diff(np.flip(cross_wavelengths)))
 
-plt.figure('h2o cross sections', figsize=(8, 6))
+plt.figure('transit depth %.2f' %spec_res, figsize=(8, 8))
+plt.subplot(212)
 plt.plot(cross_wavelengths, cross_sections)
 plt.title('Cross section of H2O')
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('cm^2/molecule')
 
-plt.figure('derivative transit depth', figsize=(8, 6))
+plt.subplot(211)
 plt.plot(cross_wavelengths, first_order_depth)
-plt.title('1st order transit depth')
-plt.xlabel('Wavelength (nm)')
+plt.title('1st order transit depth, resolution %.2f nm' %spec_res)
+plt.axhline(c='k')
+# plt.xlabel('Wavelength (nm)')
 
 
 

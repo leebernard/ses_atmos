@@ -43,8 +43,8 @@ with fits.open('sun.fits') as hdul:
 angstrom = np.arange(0, sun_data.size, step=1) * angstrom_per_pix + intial_angstrom
 
 # find a slice of data
-start_ang = 7300
-end_ang = angstrom[-1]
+start_ang = 5865
+end_ang = 5925
 angstrom_slice, sun_slice = spectrum_slicer(start_ang, end_ang, angstrom, sun_data)
 
 # filter the spectrum slice
@@ -61,6 +61,9 @@ excess_data_index = int(sun_slice.size % bin_factor)
 if excess_data_index:
     pared_angstrom_slice = angstrom_slice[:-excess_data_index]
     pared_sun_slice = filtered_sun[:-excess_data_index]
+else:
+    pared_angstrom_slice = angstrom_slice
+    pared_sun_slice = filtered_sun
 
 binned_angstroms = np.reshape(pared_angstrom_slice, (int(pared_angstrom_slice.size/bin_factor), bin_factor))
 binned_spectrum = np.reshape(pared_sun_slice, (int(pared_sun_slice.size/bin_factor), bin_factor))
@@ -84,6 +87,7 @@ plt.plot(binned_angstroms, normalized_spectrum)
 plt.plot(binned_angstroms, first_order_spectrum + 1)
 plt.title('Derivative Spectrum Comparison')
 plt.xlabel('Angstroms')
+plt.ylabel('Relative transmission')
 plt.legend(['0th order', '1st order'])
-
+plt.axhline(y=1, c='k')
 
